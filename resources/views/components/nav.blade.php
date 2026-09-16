@@ -18,7 +18,7 @@
                <a href="{{ route('dashboard') }}"
                 class="{{ request()->routeIs('dashboard') ? 'font-medium' : 'opacity-80 hover:opacity-100' }}">
                 Hi, {{ auth()->user()->name }}
-            </a>
+               </a>
 
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf

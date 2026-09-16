@@ -10,6 +10,28 @@
 </head>
 <body class="min-h-screen bg-base-200 text-base-content antialiased">
     <x-nav />
+    @auth
+        <div class="list bg-base-100 rounded-box shadow-md">
+           <h2>Benachrichtigungen: </h2>
+           <ul class="list-disc">
+            <!-- Wir lesen unsere nicht gelesenden notifications und schauen ob sie mehr als 0 sind-->
+          @if(auth()->user()->unreadNotifications->count() > 0)
+            <!-- wenn es ungelesene notifications gibt lassen wir uns die einzelnen arrays ausgeben-->
+            @foreach(auth()->user()->unreadNotifications as $notification)
+                 <!--Wir sortieren die notifikationen nach dem typ unserer notification -->
+                 @if ($notification->type == "App\Notifications\PushToTask")
+                     <!-- unsere aufgaben werden als liste und als link zur aufgabe ausgegeben-->
+                     <li><a href="{{$notification->data['url'] }}" class="underline">
+                    {{$notification->data['message']}}  - {{$notification->data['title']}}</a></li>
+                 @endif
+                
+            @endforeach
+           </ul>
+          @else
+            <p>Keine Benachrichtigungen!</p>
+          @endif
+        </div>
+    @endauth
     <main class="mx-auto max-w-5xl px-4 py-8">
      @if(session('success'))
             <div class="alert alert-success mb-6">

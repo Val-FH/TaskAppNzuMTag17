@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\PullFromTask;
+use App\Notifications\PushToTask;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -54,6 +56,12 @@ class TaskController extends Controller
        // Um die user festzuhalten zu dem task
        $task->users()->attach($request->user);
 
+       // Benachrichtigung an die User ,die der Aufgabe zugewiesen wurden,verschicken(notification)
+       foreach($task->users as $user)
+        {
+            $user->notify(new PushToTask($task));
+        }
+
         return redirect()->route('dashboard')->with('success', 'Aufgabe erfolgreich angelegt');
     }
 
@@ -78,7 +86,23 @@ class TaskController extends Controller
         // aktualisieren in der zwischen tabelle task_user, sync weil daten auch bestehen 
         // bleiben können, wichtig für zwischentabellen weil sonst id kombis sich überschreiben
         // abgewählte löschen und neue anlegen == sync!
-        $task->users()->sync($request->user);
+       $users =  $task->users()->sync($request->user);
+        // Benachrichtigung an die neu dazugekommenden User, in attached
+        foreach($users['attached'] as $userid)
+        {   // wir haben nur die id und suchen den user raus 
+            $user = User::find($userid);
+            // die user erhalten die notifikation 
+            $user->notify(new PushToTask($task));
+        }
+        // Benachrichtigung an die weggelöschten User
+        foreach($users['detached'] as $userid)
+        {   // wir haben nur die id und suchen den user raus 
+            $user = User::find($userid);
+            // die user erhalten die notifikation 
+            $user->notify(new PullFromTask($task));
+            //user bei nachricht als gelesen packen
+           // $user->unreadNotifications->update(['read_at'=>now($task->title)]);
+        }
 
         return redirect()->route('tasks.show', $task)->with('success', 'Aufgabe aktualisiert');
     }

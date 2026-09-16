@@ -15,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
+    // notifiable heißt ist benachrichtigbar
     use HasFactory, Notifiable;
 
     /**

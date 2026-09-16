@@ -21,6 +21,7 @@
                          <!-- mit unserer users() funktion aus dem task model ziehen wir die passenden user 
                             namen zum task uns aus der db und zeigen sie als string an dank implode -->
         <p class="mt-1"> {{ $task->users()->pluck('name')->implode(', ') }}    </p>  
+        
 
     </div>
 </article>
