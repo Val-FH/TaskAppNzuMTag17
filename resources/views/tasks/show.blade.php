@@ -11,8 +11,12 @@
                 </span>
             </div>
             <p class="mt-6 leading-relaxed"> {{ $task->description }} </p>
-            <!-- aus der users variable ziehen wir uns den namen und lassen das array als string mit komma getrennt anzeigen-->
-            <p class="mt-6 leading-relaxed"> {{$users->pluck('name')->implode(', ')}} </p>
+            <!-- aus der users variable ziehen wir uns den namen und lassen das array
+                 als string mit komma getrennt anzeigen-->
+            <p class="mt-6 leading-relaxed"> {{$task->users->pluck('name')->implode(', ')}} </p>
+        </div>
+        <div>
+            <!-- bearbeiten und lschen-->
         </div>
     </article>
 </x-layout>

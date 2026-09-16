@@ -24,14 +24,14 @@
              <fieldset class='fieldset'>
                 <legend>User hinzufügen (Strg + Klick)</legend>
                 <select name="user[]" id="user" multiple class="">
-                  @foreach ($users as $user )
-                        <option value="{{ $user->id }}" >
+                  @foreach ($users as $user )            <!-- wir wählen aus unseren array die user id und wollen aus -->
+                        <option value="{{ $user->id }}" @selected(in_array($user->id, old('user', $task->users->pluck('id')->toArray())))>
                              {{$user->name }}</option>  <!-- geschwungende klammern weil blade-->
                     @endforeach
                 </select>
                  <x-error name="user"/>
             </fieldset>
-            @can('task-view')
+            @can('task-view',$task)  <!-- variable mitgeben, wichtig sonst meckert er -->
             <button type="submit" class="btn btn-primary">Aufgabe ändern</button>
             @endcan
         </form>

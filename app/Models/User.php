@@ -30,7 +30,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function tasks()
+    public function tasks() // gehört zu vielen deswegen mehrzahl
     {
         return $this->belongsToMany(Task::class);
     }

@@ -28,8 +28,9 @@ class TaskController extends Controller
     }
 
     public function show(Task $task)
-    {   $users = $task->users();  //wir ziehen uns für den passenden task auch die users mit der users() funktion. Weil hier wir uns den eizelnen task ziehen
-        return view('tasks.show', compact('task', 'users'));  //return view('tasks.show', ['task' => $task]); 
+    {  // $users = $task->users();  //wir ziehen uns für den passenden task auch die users mit der users() funktion. Weil hier wir uns den eizelnen task ziehen
+       // return view('tasks.show', compact('task', 'users'));  //return view('tasks.show', ['task' => $task]); 
+        return view('tasks.show', compact('task'));  //return view('tasks.show', ['task' => $task]); 
     }
 
     public function create()
@@ -49,7 +50,8 @@ class TaskController extends Controller
         $validated['done'] = false;
        //neuen task ersellen in task tabelle, weil mehrere schritte kommt es in eine variable
        $task = Task::create($validated);
-       //wir schreiben in die zwischentabelle, deswegen attach. Um die user festzuhalten zu dem task
+       //wir schreiben in die zwischentabelle, deswegen attach.
+       // Um die user festzuhalten zu dem task
        $task->users()->attach($request->user);
 
         return redirect()->route('dashboard')->with('success', 'Aufgabe erfolgreich angelegt');
@@ -68,10 +70,15 @@ class TaskController extends Controller
         Gate::authorize('task-view', $task);
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:50'],
-            'description' => ['required', 'string', 'max:500']
+            'description' => ['required', 'string', 'max:500'],
+            'user' => ['required'],
         ]);
-
+        // update nur in der Task tabelle
         $task->update($validated);
+        // aktualisieren in der zwischen tabelle task_user, sync weil daten auch bestehen 
+        // bleiben können, wichtig für zwischentabellen weil sonst id kombis sich überschreiben
+        // abgewählte löschen und neue anlegen == sync!
+        $task->users()->sync($request->user);
 
         return redirect()->route('tasks.show', $task)->with('success', 'Aufgabe aktualisiert');
     }

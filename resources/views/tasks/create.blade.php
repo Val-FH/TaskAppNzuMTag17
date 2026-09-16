@@ -24,7 +24,7 @@
             <fieldset class='fieldset'>
                 <legend>User hinzufügen (Strg + Klick)</legend>
                 <select name="user[]" id="user" multiple class="">
-                  @foreach ($users as $user )           <!-- select als selcted und array wird rausgeholt-->
+                  @foreach ($users as $user )           <!-- select als selected und array wird rausgeholt-->
                         <option value="{{ $user->id }}" @selected(in_array($user->id, old('user', [])))>
                              {{$user->name }}</option>  <!-- geschwungende klammern weil blade-->
                     @endforeach
