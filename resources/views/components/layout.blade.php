@@ -18,12 +18,15 @@
           @if(auth()->user()->unreadNotifications->count() > 0)
             <!-- wenn es ungelesene notifications gibt lassen wir uns die einzelnen arrays ausgeben-->
             @foreach(auth()->user()->unreadNotifications as $notification)
-                 <!--Wir sortieren die notifikationen nach dem typ unserer notification -->
-                 @if ($notification->type == "App\Notifications\PushToTask")
+               
                      <!-- unsere aufgaben werden als liste und als link zur aufgabe ausgegeben-->
-                     <li><a href="{{$notification->data['url'] }}" class="underline">
-                    {{$notification->data['message']}}  - {{$notification->data['title']}}</a></li>
-                 @endif
+                     <li>
+                    <a href="{{$notification->data['url'] }}" class="underline hover:no-underline">
+                    {{$notification->data['message']}}  - {{$notification->data['title']}}</a>
+                     <!-- link zum gelesne habn-->
+                     <a href="/notifications/{{ $notification->id }}" class="underline text-red-800 ml-5">
+                         Gelesen</a>
+                    </li>
                 
             @endforeach
            </ul>

@@ -55,7 +55,7 @@ class PullFromTask extends Notification
             // Felder des Array definieren
             'title' => $this->task->title,
             'url' => url('/tasks/'.$this->task->id),
-            'message' => "Neue Aufgabe",
+            'message' => "Eine Aufgabe weniger",
         ];
     }
 }

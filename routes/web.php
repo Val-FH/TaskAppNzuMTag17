@@ -5,8 +5,10 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Arr;
 use Illuminate\Support\Facades\DB; //zugriff auf datenbanken
 use APP\Models\User; // nun können wir eloquent verwenden
+use Illuminate\Support\Arr as SupportArr;
 
 // Route::get('/', function() {
 //     return view('welcome');
@@ -30,7 +32,20 @@ Route::middleware('auth')->group(function() {
     Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
     //Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Notifications 
+    //Wir können unsere notification id weitergeben
+    Route::get('/notifications/{id}',function($id){
+        // nun suchen wir den user raus über unsere suche in
+        // den ungelesenden notifications in der notification tabelle
+        $notification = auth()->user()->unreadNotifications->firstWhere('id',$id);
+        // jetzt wo wir den datensatz haben können wir die zeile unread auf gelesen an setzten
+        $notification->markAsRead();
+        //wir werden zurück auf die seite gebracht auf der wir waren
+        return back();
+    });
 });
+
 
 // nicht angemeldete User 
 Route::middleware('guest')->group(function() {

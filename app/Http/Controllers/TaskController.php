@@ -101,7 +101,7 @@ class TaskController extends Controller
             // die user erhalten die notifikation 
             $user->notify(new PullFromTask($task));
             //user bei nachricht als gelesen packen
-           // $user->unreadNotifications->update(['read_at'=>now($task->title)]);
+           
         }
 
         return redirect()->route('tasks.show', $task)->with('success', 'Aufgabe aktualisiert');
